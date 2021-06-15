@@ -1,7 +1,5 @@
 package com.example.mvpmvvm;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.View;
@@ -9,17 +7,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.mvpmvvm.model.Callback;
-import com.example.mvpmvvm.model.MainModel;
-import com.example.mvpmvvm.model.User;
+import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+import com.example.mvpmvvm.presenter.MainPresenter;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, IView {
     private EditText et_username;
     private EditText et_password;
     private Button btn_login;
-    private MainModel mainModel;
+    private MainPresenter mainPresenter;
 
     private ProgressDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,27 +32,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dialog.setCancelable(false);
         dialog.setMessage("Please wait....");
 
-        mainModel = new MainModel();
+        mainPresenter = new MainPresenter(this);
     }
-
 
     @Override
     public void onClick(View v) {
         String username = et_username.getText().toString();
         String password = et_password.getText().toString();
         dialog.show();
-        mainModel.login(username, password, new Callback() {
-            @Override
-            public void onSuccess(User user) {
-                dialog.dismiss();
-                Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_LONG).show();
-            }
+        mainPresenter.login(username, password);
+    }
 
-            @Override
-            public void onFailure(String msg) {
-                dialog.dismiss();
-                Toast.makeText(MainActivity.this, "Failure", Toast.LENGTH_SHORT).show();
-            }
-        });
+    @Override
+    public void showProgress() {
+        dialog.show();
+    }
+
+    @Override
+    public void hideProgress() {
+        dialog.dismiss();
+    }
+
+    @Override
+    public void loginSuccess() {
+        Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void loginFailure() {
+        Toast.makeText(MainActivity.this, "Failure", Toast.LENGTH_LONG).show();
     }
 }
