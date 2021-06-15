@@ -2,11 +2,12 @@ package com.example.mvpmvvm.presenter;
 
 import com.example.mvpmvvm.IView;
 import com.example.mvpmvvm.model.Callback;
+import com.example.mvpmvvm.model.IModel;
 import com.example.mvpmvvm.model.MainModel;
 import com.example.mvpmvvm.model.User;
 
 public class MainPresenter implements IPresenter, Callback {
-    private MainModel mainModel;
+    private IModel mainModel;
     private IView mainView;
 
     public MainPresenter(IView mainView) {
